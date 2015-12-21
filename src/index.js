@@ -84,6 +84,10 @@ function HSLtoRGB(data) {
   ]
 }
 
+function luminance(val) {
+  return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4)
+}
+
 const proto = {
   // Manually set RGBA
   red(val) {
@@ -167,6 +171,12 @@ const proto = {
       ...[ r, g, b ].map(x => Math.floor(boundary(x + (255 - x) * (1 - factor)))),
       a
     ])
+  },
+
+  //Luminance http://www.w3.org/TR/WCAG20/#relativeluminancedef
+  luminance() {
+    const x = this.data
+    return 0.2126 * luminance(x[0]) + 0.7152 * luminance(x[1]) + 0.0722 * luminance(x[2])
   },
 
   // Raw return values
