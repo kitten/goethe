@@ -310,6 +310,10 @@ export default function Color(init) {
     }
     return createColor(init.slice())
   } else if (typeof init === 'object') {
+    if (init.data && init instanceof proto) {
+      return createColor(init.data.slice())
+    }
+
     assert(
       isRGB(init.r) && isRGB(init.g) && isRGB(init.b),
       'Expected object to contain RGB properties.'
