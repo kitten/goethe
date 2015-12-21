@@ -156,6 +156,9 @@ const proto = {
     const val = boundary(h + (deg % 360) / 360, 0, 1)
     return HSLtoRGB([ val, s, l, a ])
   },
+  invert() {
+    return this.rotate(180)
+  },
 
   // Factor RGB
   darken(factor) {
