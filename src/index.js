@@ -172,18 +172,18 @@ const proto = {
   saturate(factor) {
     const [ h, s, l, a ] = RGBtoHSL(this.data)
     const val = boundary(s + (1 - s) * factor, 0, 1)
-    return HSLtoRGB([ h, val, l, a ])
+    return createColor(HSLtoRGB([ h, val, l, a ]))
   },
   desaturate(factor) {
     const [ h, s, l, a ] = RGBtoHSL(this.data)
     const val = boundary(s * factor, 0, 1)
-    return HSLtoRGB([ h, val, l, a ])
+    return createColor(HSLtoRGB([ h, val, l, a ]))
   },
 
   // Greyscale / Grayscale
   greyscale() {
     const x = RGBtoHSL(this.data)
-    return HSLtoRGB([ x[0], 0, x[2], x[3] ])
+    return createColor(HSLtoRGB([ x[0], 0, x[2], x[3] ]))
   },
   grayscale() {
     return this.greyscale()
@@ -193,7 +193,7 @@ const proto = {
   rotate(deg) {
     const [ h, s, l, a ] = RGBtoHSL(this.data)
     const val = boundary(h + (deg % 360) / 360, 0, 1)
-    return HSLtoRGB([ val, s, l, a ])
+    return createColor(HSLtoRGB([ val, s, l, a ]))
   },
   invert() {
     return this.rotate(180)
