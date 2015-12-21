@@ -327,12 +327,6 @@ function isRGB(x) {
   return typeof x === 'number' && x >= 0 && x < 256
 }
 
-function isRGBArray(arr) {
-  return arr.reduce(
-    (state = true, x) => state && isRGB(x)
-  )
-}
-
 function createColor(tupel) {
   const res = Object.create(proto)
   res.data = tupel || WHITE.slice()
@@ -345,7 +339,7 @@ export default function Color(init) {
   } else if (Array.isArray(init)) {
     assert((
       init.length === 3 || init.length === 4
-    ) && isRGBArray(init), 'Expected array to only contain RGB numbers.')
+    ) && init.every(isRGB), 'Expected array to only contain RGB numbers.')
 
     if (init.length === 3) {
       return createColor([ ...init, 1 ])
