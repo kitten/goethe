@@ -216,6 +216,14 @@ const proto = {
     ])
   },
 
+  // HWB without HWB through mixing
+  whiten(factor) {
+    return this.mix(Color([ 255, 255, 255 ]), factor)
+  },
+  blacken(factor) {
+    return this.mix(Color([ 0, 0, 0 ]), factor)
+  },
+
   // Luminosity deciders
   isLight() {
     return this.luminance() > 0.5
