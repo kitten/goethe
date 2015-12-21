@@ -11,7 +11,7 @@ import assert from './util/assert'
 const WHITE = [ 255, 255, 255, 1 ]
 
 function boundary(val, min = 0, max = 255) {
-  return Math.min(max, Math.max(val, min))
+  return Math.floor(Math.min(max, Math.max(val, min)))
 }
 
 const proto = {
