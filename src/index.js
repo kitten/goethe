@@ -278,6 +278,14 @@ const proto = {
   // Automatically display a hex string
   valueOf() {
     return this.toString()
+  },
+
+  // Shallow copying
+  copy() {
+    return createColor(this.data.slice())
+  },
+  clone() {
+    return this.copy()
   }
 }
 
