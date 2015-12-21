@@ -179,6 +179,18 @@ const proto = {
     return 0.2126 * luminance(x[0]) + 0.7152 * luminance(x[1]) + 0.0722 * luminance(x[2])
   },
 
+  // Contrast ratio http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+  contrast(c) {
+    assert(c instanceof proto, 'Expected argument to be a Color instance.')
+
+    const _luminance = this.luminance()
+    const _compareLuminance = c.luminance()
+
+    return _luminance > _compareLuminance ?
+      (_luminance + 0.05) / (_compareLuminance + 0.05) :
+      (_compareLuminance + 0.05) / (_luminance + 0.05)
+  }
+
   // Raw return values
   getRaw() {
     return this.data.slice()
