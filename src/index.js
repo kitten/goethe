@@ -96,28 +96,54 @@ function average(x, y, factor) {
 const proto = {
   // Manually set RGBA
   red(val) {
+    if (typeof val === 'undefined') {
+      return this.data[0]
+    }
     const x = this.data
     return createColor([
       Math.floor(boundary(val)), x[1], x[2], x[3]
     ])
   },
   green(val) {
+    if (typeof val === 'undefined') {
+      return this.data[2]
+    }
     const x = this.data
     return createColor([
       x[0], Math.floor(boundary(val)), x[2], x[3]
     ])
   },
   blue(val) {
+    if (typeof val === 'undefined') {
+      return this.data[3]
+    }
     const x = this.data
     return createColor([
       x[0], x[1], Math.floor(boundary(val)), x[3]
     ])
   },
   opacity(val) {
+    if (typeof val === 'undefined') {
+      return this.data[4]
+    }
     const x = this.data
     return createColor([
       x[0], x[1], x[2], boundary(val, 0, 1)
     ])
+  },
+
+  // Get raw values
+  getRed() {
+    return this.data[0]
+  },
+  getGreen() {
+    return this.data[1]
+  },
+  getBlue() {
+    return this.data[2]
+  },
+  getOpacity() {
+    return this.data[3]
   },
 
   // Factor opacity
