@@ -146,6 +146,14 @@ const proto = {
     return this.data[3]
   },
 
+  // Get arrays
+  rgbArray() {
+    return this.data.slice()
+  },
+  hslArray() {
+    return RGBtoHSL(this.data)
+  },
+
   // Factor opacity
   clearer(factor) {
     const [ r, g, b, a ] = this.data
