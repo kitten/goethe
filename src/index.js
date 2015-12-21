@@ -178,6 +178,9 @@ const proto = {
     const x = this.data
     return 0.2126 * luminance(x[0]) + 0.7152 * luminance(x[1]) + 0.0722 * luminance(x[2])
   },
+  luminosity() {
+    return this.luminance()
+  },
 
   // Contrast ratio http://www.w3.org/TR/WCAG20/#contrast-ratiodef
   contrast(c) {
@@ -189,7 +192,15 @@ const proto = {
     return _luminance > _compareLuminance ?
       (_luminance + 0.05) / (_compareLuminance + 0.05) :
       (_compareLuminance + 0.05) / (_luminance + 0.05)
-  }
+  },
+
+  // Luminosity deciders
+  isLight() {
+    return this.luminance() > 0.5
+  },
+  isDark() {
+    return this.luminance() <= 0.5
+  },
 
   // Raw return values
   getRaw() {
