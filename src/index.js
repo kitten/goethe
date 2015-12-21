@@ -137,6 +137,22 @@ const proto = {
     return HSLtoRGB([ h, val, l, a ])
   },
 
+  // Greyscale / Grayscale
+  greyscale() {
+    const x = RGBtoHSL(this.data)
+    return HSLtoRGB([ x[0], 0, x[2], x[3] ])
+  },
+  grayscale() {
+    return this.greyscale()
+  },
+
+  // Rotate hue in HSL
+  rotate(deg) {
+    const [ h, s, l, a ] = RGBtoHSL(this.data)
+    const val = boundary(h + (deg % 360) / 360, 0, 1)
+    return HSLtoRGB([ val, s, l, a ])
+  },
+
   // Factor RGB
   darken(factor) {
     const [ r, g, b, a ] = this.data
