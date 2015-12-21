@@ -11,7 +11,7 @@ import assert from './util/assert'
 const WHITE = [ 255, 255, 255, 1 ]
 
 function boundary(val, min = 0, max = 255) {
-  return Math.floor(Math.min(max, Math.max(val, min)))
+  return Math.min(max, Math.max(val, min))
 }
 
 const proto = {
@@ -19,19 +19,19 @@ const proto = {
   red(val) {
     const x = this.data
     return createColor([
-      boundary(val), x[1], x[2], x[3]
+      Math.floor(boundary(val)), x[1], x[2], x[3]
     ])
   },
   green(val) {
     const x = this.data
     return createColor([
-      x[0], boundary(val), x[2], x[3]
+      x[0], Math.floor(boundary(val)), x[2], x[3]
     ])
   },
   blue(val) {
     const x = this.data
     return createColor([
-      x[0], x[1], boundary(val), x[3]
+      x[0], x[1], Math.floor(boundary(val)), x[3]
     ])
   },
   opacity(val) {
@@ -59,14 +59,14 @@ const proto = {
   darken(factor) {
     const [ r, g, b, a ] = this.data
     return createColor([
-      ...[ r, g, b ].map(x => boundary(x * (1 - factor))),
+      ...[ r, g, b ].map(x => Math.floor(boundary(x * (1 - factor)))),
       a
     ])
   },
   lighten(factor) {
     const [ r, g, b, a ] = this.data
     return createColor([
-      ...[ r, g, b ].map(x => boundary(x + (255 - x) * (1 - factor))),
+      ...[ r, g, b ].map(x => Math.floor(boundary(x + (255 - x) * (1 - factor)))),
       a
     ])
   },
