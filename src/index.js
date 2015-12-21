@@ -88,6 +88,11 @@ function luminance(val) {
   return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4)
 }
 
+function average(x, y, factor) {
+  factor = boundary(factor, 0, 1)
+  return ((1 - factor) * x + factor * y) / 2
+}
+
 const proto = {
   // Manually set RGBA
   red(val) {
@@ -195,6 +200,20 @@ const proto = {
     return _luminance > _compareLuminance ?
       (_luminance + 0.05) / (_compareLuminance + 0.05) :
       (_compareLuminance + 0.05) / (_luminance + 0.05)
+  },
+
+  // Mix colors
+  mix(c, factor = 0.5) {
+    assert(c instanceof proto, 'Expected argument to be a Color instance.')
+    const x = this.data
+    const y = c
+
+    return createColor([
+      boundary(average(x[0], y[0], factor)),
+      boundary(average(x[1], y[1], factor)),
+      boundary(average(x[2], y[2], factor)),
+      x[3]
+    ])
   },
 
   // Luminosity deciders
