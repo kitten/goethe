@@ -14,6 +14,76 @@ function boundary(val, min = 0, max = 255) {
   return Math.min(max, Math.max(val, min))
 }
 
+// Source of the RGB <---> HSL conversion functions:
+// http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
+
+function RGBtoHSL(data) {
+  let [ r, g, b, a ] = data.slice()
+  r /= 255
+  b /= 255
+  g /= 255
+
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+
+  let h, s, l = (max + min) / 2
+
+  if (max === min) {
+    h = s = 0
+  } else {
+    const delta = max - min
+    s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min)
+    switch (max) {
+      case r: {
+        h = (g - b) / delta + (g < b ? 6 : 0)
+        break
+      }
+      case g: {
+        h = (b - r) / delta + 2
+        break
+      }
+      case b: {
+        h = (r - g) / delta + 4
+        break
+      }
+    }
+    h /= 6
+  }
+
+  return [ h, s, l, a ]
+}
+
+function HSLtoRGB(data) {
+  let [ h, s, l, a ] = data.slice()
+  let r, g, b = 0
+
+  if (s === 0) {
+    r = g = b = l
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1
+      if (t > 1) t -= 1
+      if (t < 1/6) return p + (q - p) * 6 * t
+      if (t < 1/2) return q
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
+      return p
+    }
+
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+    const p = 2 * l - q
+    r = hue2rgb(p, q, h + 1/3)
+    g = hue2rgb(p, q, h)
+    b = hue2rgb(p, q, h - 1/3)
+  }
+
+  return [
+    Math.round(r * 255),
+    Math.round(g * 255),
+    Math.round(b * 255),
+    a
+  ]
+}
+
 const proto = {
   // Manually set RGBA
   red(val) {
@@ -53,6 +123,18 @@ const proto = {
     return createColor([
       r, g, b, boundary(a / factor, 0, 1)
     ])
+  },
+
+  // Factor HSL
+  saturate(factor) {
+    const [ h, s, l, a ] = RGBtoHSL(this.data)
+    const val = boundary(s + (1 - s) * factor, 0, 1)
+    return HSLtoRGB([ h, val, l, a ])
+  },
+  desaturate(factor) {
+    const [ h, s, l, a ] = RGBtoHSL(this.data)
+    const val = boundary(s * factor, 0, 1)
+    return HSLtoRGB([ h, val, l, a ])
   },
 
   // Factor RGB
