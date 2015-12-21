@@ -153,7 +153,7 @@ export default function Color(init) {
       isRGB(init.r) && isRGB(init.g) && isRGB(init.b),
       'Expected object to contain RGB properties.'
     )
-    return createColor([ init.r, init.g, init.b, init.a || 1 ])
+    return createColor([ init.r, init.g, init.b, boundary(init.a || 1, 0, 1) ])
   }
 
   return createColor()
