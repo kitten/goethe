@@ -4,6 +4,9 @@ Immutable color utility with conversion and manipulation. Basically an immutable
 version of [MoOx/color](https://github.com/MoOx/color) but fully functional /
 immutable.
 
+[![build status](https://img.shields.io/travis/philplckthun/goethe/master.svg)](https://travis-ci.org/philplckthun/goethe)
+[![npm version](https://img.shields.io/npm/v/goethe.svg)](https://www.npmjs.com/package/goethe)
+
 ## Installation
 
 To install the latest version:
