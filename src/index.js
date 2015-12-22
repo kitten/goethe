@@ -14,25 +14,28 @@ function boundary(val, min = 0, max = 255) {
   return Math.min(max, Math.max(val, min))
 }
 
-// Source of the RGB <---> HSL conversion functions:
-// http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
+// Source of the RGB <---> HSV conversion functions:
+// https://gist.github.com/mjackson/5311256
 
-function RGBtoHSL(data) {
-  let [ r, g, b, a ] = data.slice()
+function RGBtoHSV(data) {
+  let [ r, g, b, a ] = data
   r /= 255
-  b /= 255
   g /= 255
+  b /= 255
 
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
 
-  let h, s, l = (max + min) / 2
+  let h = max
+  let s = max
+  let v = max
+
+  const delta = max - min
+  s = (max == 0) ? 0 : delta / max
 
   if (max === min) {
-    h = s = 0
+    h = 0
   } else {
-    const delta = max - min
-    s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min)
     switch (max) {
       case r: {
         h = (g - b) / delta + (g < b ? 6 : 0)
@@ -47,33 +50,30 @@ function RGBtoHSL(data) {
         break
       }
     }
+
     h /= 6
   }
 
-  return [ h, s, l, a ]
+  return [ h, s, v, a ]
 }
 
-function HSLtoRGB(data) {
-  let [ h, s, l, a ] = data.slice()
-  let r, g, b = 0
+function HSVtoRGB(data) {
+  let [ h, s, v, a ] = data
+  let r, g, b
 
-  if (s === 0) {
-    r = g = b = l
-  } else {
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1
-      if (t > 1) t -= 1
-      if (t < 1/6) return p + (q - p) * 6 * t
-      if (t < 1/2) return q
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
-      return p
-    }
+  const i = Math.floor(h * 6)
+  const f = h * 6 - i
+  const p = v * (1 - s)
+  const q = v * (1 - f * s)
+  const t = v * (1 - (1 - f) * s)
 
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s
-    const p = 2 * l - q
-    r = hue2rgb(p, q, h + 1/3)
-    g = hue2rgb(p, q, h)
-    b = hue2rgb(p, q, h - 1/3)
+  switch (i % 6) {
+    case 0: r = v, g = t, b = p; break
+    case 1: r = q, g = v, b = p; break
+    case 2: r = p, g = v, b = t; break
+    case 3: r = p, g = q, b = v; break
+    case 4: r = t, g = p, b = v; break
+    case 5: r = v, g = p, b = q; break
   }
 
   return [
@@ -84,19 +84,20 @@ function HSLtoRGB(data) {
   ]
 }
 
-function luminance(val) {
+function luminance(input) {
+  const val = input / 255
   return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4)
 }
 
 function average(x, y, factor) {
   factor = boundary(factor, 0, 1)
-  return ((1 - factor) * x + factor * y) / 2
+  return Math.floor(((1 - factor) * x + 2 * factor * y) / 2)
 }
 
 const proto = {
   // Manually set RGBA
   red(val) {
-    if (typeof val === 'undefined') {
+    if (val === undefined) {
       return this.data[0]
     }
     const x = this.data
@@ -105,8 +106,8 @@ const proto = {
     ])
   },
   green(val) {
-    if (typeof val === 'undefined') {
-      return this.data[2]
+    if (val === undefined) {
+      return this.data[1]
     }
     const x = this.data
     return createColor([
@@ -114,8 +115,8 @@ const proto = {
     ])
   },
   blue(val) {
-    if (typeof val === 'undefined') {
-      return this.data[3]
+    if (val === undefined) {
+      return this.data[2]
     }
     const x = this.data
     return createColor([
@@ -123,8 +124,8 @@ const proto = {
     ])
   },
   opacity(val) {
-    if (typeof val === 'undefined') {
-      return this.data[4]
+    if (val === undefined) {
+      return this.data[3]
     }
     const x = this.data
     return createColor([
@@ -150,8 +151,14 @@ const proto = {
   rgbArray() {
     return this.data.slice()
   },
-  hslArray() {
-    return RGBtoHSL(this.data)
+  getRaw() {
+    return this.rgbArray()
+  },
+  raw() {
+    return this.rgbArray()
+  },
+  hsvArray() {
+    return RGBtoHSV(this.data)
   },
 
   // Factor opacity
@@ -170,20 +177,20 @@ const proto = {
 
   // Factor HSL
   saturate(factor) {
-    const [ h, s, l, a ] = RGBtoHSL(this.data)
-    const val = boundary(s + (1 - s) * factor, 0, 1)
-    return createColor(HSLtoRGB([ h, val, l, a ]))
+    const [ h, s, v, a ] = RGBtoHSV(this.data)
+    const val = s + (1 - s) * boundary(factor, 0, 1)
+    return createColor(HSVtoRGB([ h, val, v, a ]))
   },
   desaturate(factor) {
-    const [ h, s, l, a ] = RGBtoHSL(this.data)
-    const val = boundary(s * factor, 0, 1)
-    return createColor(HSLtoRGB([ h, val, l, a ]))
+    const [ h, s, v, a ] = RGBtoHSV(this.data)
+    const val = s - s * boundary(factor, 0, 1)
+    return createColor(HSVtoRGB([ h, val, v, a ]))
   },
 
   // Greyscale / Grayscale
   greyscale() {
-    const x = RGBtoHSL(this.data)
-    return createColor(HSLtoRGB([ x[0], 0, x[2], x[3] ]))
+    const x = RGBtoHSV(this.data)
+    return createColor(HSVtoRGB([ x[0], 0, x[2], x[3] ]))
   },
   grayscale() {
     return this.greyscale()
@@ -191,9 +198,9 @@ const proto = {
 
   // Rotate hue in HSL
   rotate(deg) {
-    const [ h, s, l, a ] = RGBtoHSL(this.data)
-    const val = boundary(h + (deg % 360) / 360, 0, 1)
-    return createColor(HSLtoRGB([ val, s, l, a ]))
+    const [ h, s, v, a ] = RGBtoHSV(this.data)
+    const val = boundary((h + (deg % 360) / 360) % 1, 0, 1)
+    return createColor(HSVtoRGB([ val, s, v, a ]))
   },
   invert() {
     return this.rotate(180)
@@ -202,20 +209,26 @@ const proto = {
   // Factor RGB
   darken(factor) {
     const [ r, g, b, a ] = this.data
+    const val = boundary(factor, 0, 1)
     return createColor([
-      ...[ r, g, b ].map(x => Math.floor(boundary(x * (1 - factor)))),
+      ...[ r, g, b ].map(x => Math.floor(
+        boundary(x - x * val)
+      )),
       a
     ])
   },
   lighten(factor) {
     const [ r, g, b, a ] = this.data
+    const val = boundary(factor, 0, 1)
     return createColor([
-      ...[ r, g, b ].map(x => Math.floor(boundary(x + (255 - x) * (1 - factor)))),
+      ...[ r, g, b ].map(x => Math.floor(
+        boundary(x + (255 - x) * val)
+      )),
       a
     ])
   },
 
-  //Luminance http://www.w3.org/TR/WCAG20/#relativeluminancedef
+  // Luminance http://www.w3.org/TR/WCAG20/#relativeluminancedef
   luminance() {
     const x = this.data
     return 0.2126 * luminance(x[0]) + 0.7152 * luminance(x[1]) + 0.0722 * luminance(x[2])
@@ -226,7 +239,7 @@ const proto = {
 
   // Contrast ratio http://www.w3.org/TR/WCAG20/#contrast-ratiodef
   contrast(c) {
-    assert(c instanceof proto, 'Expected argument to be a Color instance.')
+    assert(proto.isPrototypeOf(c), 'Expected argument to be a Color instance.')
 
     const _luminance = this.luminance()
     const _compareLuminance = c.luminance()
@@ -238,9 +251,9 @@ const proto = {
 
   // Mix colors
   mix(c, factor = 0.5) {
-    assert(c instanceof proto, 'Expected argument to be a Color instance.')
+    assert(proto.isPrototypeOf(c), 'Expected argument to be a Color instance.')
     const x = this.data
-    const y = c
+    const y = c.data
 
     return createColor([
       boundary(average(x[0], y[0], factor)),
@@ -264,14 +277,6 @@ const proto = {
   },
   isDark() {
     return this.luminance() <= 0.5
-  },
-
-  // Raw return values
-  getRaw() {
-    return this.data.slice()
-  },
-  raw() {
-    return this.data.slice()
   },
 
   // Convert to object
@@ -346,7 +351,7 @@ export default function Color(init) {
     }
     return createColor(init.slice())
   } else if (typeof init === 'object') {
-    if (init.data && init instanceof proto) {
+    if (init.data && proto.isPrototypeOf(init)) {
       return createColor(init.data.slice())
     }
 

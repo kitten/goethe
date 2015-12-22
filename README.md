@@ -71,7 +71,7 @@ color.getRed()
 color.getOpacity()
 
 color.rgbArray()
-color.hslArray()
+color.hsvArray()
 color.raw()
 color.getRaw()
 
@@ -124,7 +124,7 @@ color.invert() // Rotates by 180 degrees
 color.darken(factor)
 color.lighten(factor)
 
-// Returns the contrast ratio of two colors which is a value between 0 and 12
+// Returns the contrast ratio of two colors which is a value between 0 and 21
 color.contrast(another_color)
 
 // Mixes the second color to the first by the factor
