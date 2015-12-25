@@ -7,7 +7,7 @@ immutable.
 [![build status](https://img.shields.io/travis/philplckthun/goethe/master.svg)](https://travis-ci.org/philplckthun/goethe)
 [![npm version](https://img.shields.io/npm/v/goethe.svg)](https://www.npmjs.com/package/goethe)
 
-## Installation
+## Usage
 
 To install the latest version:
 
@@ -15,13 +15,18 @@ To install the latest version:
 npm install --save goethe
 ```
 
-## Usage
+Then? Just go crazy :)
 
-```
+```js
 import Color from 'goethe';
 
-const black = Color('black');
+const very = Color([10, 230, 40]).lighten(40).clearer(0.1);
+const easy = Color('red').mix(very, 0.3).rotate(20).opacity(1);
+const usage = easy.red(200).blacken(0.1);
 ```
+
+You can call `.toString([mode])` manually, but *goethe* has valueOf set. That means
+that the colors can be converted to RGB(A) CSS strings automatically.
 
 ## Constructors
 
