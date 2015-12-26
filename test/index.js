@@ -175,3 +175,13 @@ test('.isLight() and .isDark()', t => {
 
   t.end()
 })
+
+test('.is()', t => {
+  const color = Color('black')
+  const obj = {}
+
+  t.ok(Color.is(color))
+  t.notOk(Color.is(obj))
+
+  t.end()
+})

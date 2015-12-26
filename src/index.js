@@ -378,3 +378,6 @@ export default function Color(init) {
 
   return createColor()
 }
+
+// Check whether an object is a Color
+Color.is = obj => typeof obj === 'object' && proto.isPrototypeOf(obj)

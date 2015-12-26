@@ -165,6 +165,9 @@ color.blacken(factor)
 // Copy / Clone color
 color.copy()
 color.clone()
+
+// Check whether an object is a Color
+Color.is(color)
 ```
 
 ## License
