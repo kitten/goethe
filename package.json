@@ -50,5 +50,8 @@
   },
   "dependencies": {
     "color-string": "^0.3.0"
+  },
+  "optionalDependencies": {
+    "colors.css": "^2.3.0"
   }
 }

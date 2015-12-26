@@ -28,6 +28,20 @@ const usage = easy.red(200).blacken(0.1);
 You can call `.toString([mode])` manually, but *goethe* has valueOf set. That means
 that the colors can be converted to RGB(A) CSS strings automatically.
 
+*Goethe* also supports [Adam Morse's](https://github.com/mrmrs) nicer palette
+for the web, also known as [Colors.css](http://clrs.cc/). Here's how to use it:
+
+```js
+import Color from 'goethe/lib/with-better-colors';
+
+const blue = Color('blue');
+
+blue.toString('hex') // #0074D9
+```
+
+Note that the npm `colors.css` package is listed as an optional dependency for
+*Goethe*.
+
 ## Constructors
 
 You can input a lot into Goethe's `Color` constructor.
