@@ -133,6 +133,20 @@ const proto = {
     ])
   },
 
+  // Setters for completeness
+  setRed(val) {
+    this.red(val)
+  },
+  setGreen(val) {
+    this.green(val)
+  },
+  setBlue(val) {
+    this.blue(val)
+  },
+  setOpacity(val) {
+    this.opacity(val)
+  },
+
   // Get raw values
   getRed() {
     return this.data[0]

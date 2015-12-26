@@ -76,6 +76,12 @@ color.red(234)
 color.green(234)
 color.blue(234)
 color.opacity(0.5)
+
+// And for completeness
+color.setRed(234)
+color.setGreen(234)
+color.setBlue(234)
+color.setOpacity(0.5)
 ```
 
 ## Getters
