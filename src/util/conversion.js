@@ -83,9 +83,9 @@ export function HSVtoRGB([ h, s, v, a ]) {
     }
   }
 
-  r *= 255
-  g *= 255
-  b *= 255
+  r = Math.round(r * 255)
+  g = Math.round(g * 255)
+  b = Math.round(b * 255)
 
   return [ r, g, b, a ]
 }
