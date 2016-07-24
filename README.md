@@ -4,8 +4,11 @@ Immutable color utility with conversion and manipulation. Basically an immutable
 version of [MoOx/color](https://github.com/MoOx/color) but fully functional /
 immutable.
 
-[![build status](https://img.shields.io/travis/philpl/goethe/master.svg)](https://travis-ci.org/philplckthun/goethe)
-[![npm version](https://img.shields.io/npm/v/goethe.svg)](https://www.npmjs.com/package/goethe)
+<a href="https://travis-ci.org/philpl/goethe"><img src="https://img.shields.io/travis/philpl/goethe/master.svg"></a>
+<a href="https://coveralls.io/github/philpl/goethe"><img src="https://img.shields.io/coveralls/philpl/goethe/master.svg"></a>
+<a href="https://npmjs.com/package/goethe"><img src="https://img.shields.io/npm/dm/goethe.svg"></a>
+<a href="https://npmjs.com/package/goethe"><img src="https://img.shields.io/npm/v/goethe.svg"></a>
+
 
 ## Usage
 
@@ -170,6 +173,3 @@ color.clone()
 Color.is(color)
 ```
 
-## License
-
-MIT

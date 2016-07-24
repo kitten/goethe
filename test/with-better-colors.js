@@ -1,15 +1,15 @@
-import test from 'tape'
+import expect from 'expect'
 
-import colors_css from 'colors.css'
+import colorsCSS from 'colors.css'
 import Color from '../src/with-better-colors'
 
-test('Colors.css support', t => {
-  for (let name in colors_css) {
-    t.equal(
-      Color(name).toString(),
-      Color(colors_css[name]).toString()
-    )
-  }
-
-  t.end()
+describe('colors.css support', () => {
+  it('works as expected', () => {
+    for (const name in colorsCSS) {
+      if (colorsCSS.hasOwnProperty(name)) {
+        expect(Color(name).toString())
+          .toBe(Color(colorsCSS[name]).toString())
+      }
+    }
+  })
 })
