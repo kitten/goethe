@@ -14,7 +14,7 @@
     "test:watch": "npm test -- --watch",
     "test:cov": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint src",
-    "clean": "rm -rf lib",
+    "clean": "rm -rf lib es",
     "build:commonjs": "BABEL_ENV=commonjs babel src --out-dir lib",
     "build:es": "babel src --out-dir es",
     "build": "npm run build:commonjs && npm run build:es",
