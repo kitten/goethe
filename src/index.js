@@ -1,10 +1,6 @@
 import {
-  getRgba,
-  hexString,
-  rgbString,
-  percentString,
-  keyword,
-  hslString
+  get,
+  to
 } from 'color-string'
 
 import assert from './util/assert'
@@ -229,16 +225,16 @@ const proto = {
   // Convert to String
   toString(mode) {
     if (mode === 'hex') {
-      return hexString(this.data)
+      return to.hex(this.data)
     } else if (mode === 'percent') {
-      return percentString(this.data)
+      return to.rgb.percent(this.data)
     } else if (mode === 'keyword') {
-      return keyword(this.data)
+      return to.keyword(this.data)
     } else if (mode === 'hsl') {
-      return hslString(this.data)
+      return to.hsl(this.data)
     }
 
-    return rgbString(this.data)
+    return to.rgb(this.data)
   },
 
   // Compatibility
@@ -275,7 +271,7 @@ function createColor(tupel) {
 
 export default function Color(init) {
   if (typeof init === 'string') {
-    return createColor(getRgba(init))
+    return createColor(get.rgb(init))
   } else if (Array.isArray(init)) {
     assert((
       init.length === 3 || init.length === 4

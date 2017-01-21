@@ -41,7 +41,7 @@
     "hex"
   ],
   "dependencies": {
-    "color-string": "^0.3.0"
+    "color-string": "^1.4.0"
   },
   "optionalDependencies": {
     "colors.css": "^2.3.0"
